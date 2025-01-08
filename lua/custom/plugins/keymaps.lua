@@ -30,6 +30,15 @@ vim.keymap.set("n", "<leader>rn", function()
 end)
 
 vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true })
+vim.keymap.set("n", "cp", "p", { noremap = true, silent = true })
+
+vim.keymap.set("n", "p", '"0p', { noremap = true, silent = true })
+
 -- vim.keymap.set("n", "<leader>rn", ":w | !javac % && java %:t:r<CR>", { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true })
+
+-- keymap to close current buffer
+vim.keymap.set("n", "<leader>wq", ":bd<CR>", { desc = "closes the current buffer", noremap = true })
 
 return {}
