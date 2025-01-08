@@ -25,7 +25,25 @@ vim.keymap.set("n", "<leader>rn", function()
 		vim.cmd(":tabnew | terminal lua " .. file_name)
 	elseif file_type == "java" then
 		local class_name = vim.fn.fnamemodify(file_name, ":t:r")
-		vim.cmd(':tabnew | terminal bash -c "javac ' .. file_name .. " && java " .. class_name .. '"')
+		local exec_dir = "exec" -- Define the exec directory
+		local class_file_in_exec = exec_dir .. "/" .. class_name .. ".class" -- Path for the class file
+
+		-- Create the exec directory if it doesn't exist
+		vim.fn.mkdir(exec_dir, "p")
+
+		-- Compile the Java file and save the .class file inside the exec directory
+		vim.cmd("silent !javac -d " .. vim.fn.fnameescape(exec_dir) .. " " .. vim.fn.fnameescape(file_name))
+
+		-- Run the compiled class file from the exec directory
+		vim.cmd(
+			':tabnew | terminal bash -c "cd '
+				.. vim.fn.getcwd()
+				.. " && java -cp "
+				.. exec_dir
+				.. " "
+				.. class_name
+				.. '"'
+		)
 	end
 end)
 
@@ -38,7 +56,10 @@ vim.keymap.set("n", "p", '"0p', { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-s>", ":w<CR>", { noremap = true })
 
--- keymap to close current buffer
+-- keymap for tabs
 vim.keymap.set("n", "<leader>wq", ":bd<CR>", { desc = "closes the current buffer", noremap = true })
 
+vim.keymap.set("n", "<leader>wl", ":tabnext<CR>", { desc = "moves you to the next tab ", noremap = true })
+
+vim.keymap.set("n", "<leader>wh", ":tabprevious<CR>", { desc = "moves you to the prev tab ", noremap = true })
 return {}
